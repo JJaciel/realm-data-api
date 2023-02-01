@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
 import { GraphQLError, GraphQLFormattedError } from "graphql";
-import { verifyToken } from "../jwt/jwt";
+import { verifyToken } from "../util/jwt";
 
 import { usersResolvers } from "../users/users.resolvers";
 import { usersTypeDefs } from "../users/users.gql";
@@ -18,22 +18,8 @@ export const getApolloServerConfig = () => ({
   },
 });
 
-let tokenn: string;
-
 export const contextMiddleware = async ({ req }: { req: IncomingMessage }) => {
   const token = req.headers["authorization"]?.split(" ")[1];
-
-  if (token && tokenn === token) {
-    tokenn = "";
-    throw new GraphQLError("Authentication error", {
-      extensions: {
-        code: "UNAUTHENTICATED",
-        http: { status: 401 },
-        details: "Token required",
-      },
-    });
-  }
-  if (token && !tokenn) tokenn = token;
 
   if (!token)
     throw new GraphQLError("Authentication error", {
