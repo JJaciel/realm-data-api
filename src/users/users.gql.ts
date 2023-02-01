@@ -2,10 +2,14 @@ export const usersTypeDefs = `#graphql
     type User {
         userId: String!
         email: String!
-        userName: String
+        username: String
     }
 
     type Query {
         user: User
+    }
+
+    type Mutation {
+        updateUserUsername(username: String!): User
     }
 `;

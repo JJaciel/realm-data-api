@@ -10,7 +10,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { getPort, getAllowedCors } from "./util/envVars";
-import { initializeFirebase } from "./services/auth.service";
+import { initializeFirebase } from "./services/initializeFirebase";
 import { getApolloServerConfig, contextMiddleware } from "./gql/server.config";
 
 const app: Application = express();
@@ -49,6 +49,19 @@ initializeFirebase();
 
 const server = httpServer.listen({ port });
 console.log(`🚀  Server is running on port ${port}`);
+
+server.on("error", (err) => {
+  console.log("error");
+  console.log(err.message);
+  server.close(() => {
+    console.log("closing server");
+  });
+
+  server.on("close", () => {
+    console.log("Server closed");
+    process.exit(1);
+  });
+});
 
 process.on("SIGINT", () => {
   console.log("Received SIGINT, shutting down server...");
