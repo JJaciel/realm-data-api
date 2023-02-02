@@ -1,0 +1,2 @@
+// TS types
+export {};

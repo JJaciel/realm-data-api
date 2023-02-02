@@ -1,6 +1,6 @@
 import admin from "firebase-admin";
 
-import { getGoogleAppCredentialsPath } from "../util/envVars";
+import { getGoogleAppCredentialsPath } from "./envVars";
 
 const credential = admin.credential.cert(getGoogleAppCredentialsPath());
 

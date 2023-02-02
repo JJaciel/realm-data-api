@@ -10,8 +10,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { getPort, getAllowedCors } from "./util/envVars";
-import { initializeFirebase } from "./services/initializeFirebase";
-import { getApolloServerConfig, contextMiddleware } from "./gql/server.config";
+import { initializeFirebase } from "./util/initializeFirebase";
+import { getApolloServerConfig } from "./util/getApolloServerConfig";
+import { authMiddleware } from "./authMiddleware";
 
 const app: Application = express();
 const httpServer = http.createServer(app);
@@ -22,7 +23,6 @@ const allowedCors = getAllowedCors() || "http://localhost:8080";
 const apolloServer = new ApolloServer<{ userId: string }>({
   ...getApolloServerConfig(),
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-  introspection: true,
 });
 
 initializeFirebase();
@@ -35,7 +35,7 @@ initializeFirebase();
     cors<cors.CorsRequest>({ origin: allowedCors }),
     bodyParser.json(),
     expressMiddleware<{ userId: string }>(apolloServer, {
-      context: contextMiddleware,
+      context: authMiddleware,
     })
   );
   app.use((req, res) => {

@@ -1,7 +1,7 @@
 import { verify } from "jsonwebtoken";
 import { readFileSync } from "fs";
 
-import { getAuthPublicKeyPath } from "../util/envVars";
+import { getAuthPublicKeyPath } from "./envVars";
 
 export function verifyToken(token: string) {
   const publicKey = readFileSync(getAuthPublicKeyPath());
